@@ -13,16 +13,35 @@ interface TileProps {
 }
 
 export default function Tile(props: TileProps){
+    const [shake, setShake] = useState(false);
+    const [scale, setScale] = useState(false);
+
+    useEffect(() => {
+        if (props.isMatched && props.isFlipped) {
+            setScale(true);
+            setTimeout(() => setScale(false), 500);
+        }
+    }, [props.isMatched]);
+
+    useEffect(() => {
+        // Trigger shake when tile is flipped but about to be unflipped (not matched)
+        if (props.isFlipped && !props.isMatched && props.disabled) {
+            setShake(true);
+            setTimeout(() => setShake(false), 500);
+        }
+    }, [props.disabled, props.isFlipped, props.isMatched]);
+
     return(
         <div 
-            className={`w-24 h-24 bg-white rounded-lg shadow-md flex items-center justify-center cursor-pointer transition-all duration-500 transform ${
+            className={`w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-lg shadow-md flex items-center justify-center cursor-pointer transition-all duration-500 transform ${
                 props.disabled ? 'pointer-events-none' : ''
-            }`}
+            } ${ props.isMatched ? 'bg-purple-100' : 'bg-white' }`}
             onClick={!props.disabled ? props.onClick : undefined}
             style={{
                 transformStyle: 'preserve-3d',
-                transition: 'transform 0.6s',
-                transform: props.isFlipped || props.isMatched ? 'rotateY(180deg)' : 'rotateY(0deg)'
+                transition: shake ? 'none' : 'transform 0.6s',
+                transform: props.isFlipped || props.isMatched ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                animation: shake ? 'shake 0.5s' : scale ? 'scale 0.5s' : 'none'
             }}
             
         >
@@ -32,12 +51,24 @@ export default function Tile(props: TileProps){
                 alt="Tile Image"
                 width={64}
                 height={64}
-                className={`w-16 h-16 ${props.isMatched ? 'opacity-80' : ''}`}
+                className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16"
                 style={{ transform: 'rotateY(180deg)' }}
             />
          ) : (
             <div></div>
          )}
+         <style jsx>{`
+           @keyframes shake {
+             0%, 100% { transform: translateX(0) rotateY(180deg); }
+             25% { transform: translateX(-8px) rotateY(180deg); }
+             50% { transform: translateX(8px) rotateY(180deg); }
+             75% { transform: translateX(-8px) rotateY(180deg); }
+           }
+           @keyframes scale {
+             0%, 100% { transform: scale(1) rotateY(180deg); }
+             50% { transform: scale(1.1) rotateY(180deg); }
+           }
+         `}</style>
         </div>
     )
 }

@@ -114,25 +114,25 @@ export default function Game() {
 
 
     return(
-        <div className="container mx-auto px-4 py-8 bg-gray-50 rounded-lg shadow-lg max-w-3xl">
+        <div className="flex flex-col px-4 py-8 bg-white/10 backdrop-blur-md rounded-lg shadow-lg w-2xl">
             {/* header - title, moves, timer, restart */}
-            <div className="mb-8">``
+            <div className="mb-8">
                 <h1 className="text-4xl font-bold text-center mb-6">Memory Game</h1>
                 <div className="flex justify-center items-center gap-6">
-                    <div className="bg-white shadow-md rounded-lg px-6 py-3">
-                        <span className="font-semibold">Moves: <span className="text-blue-600">{moves}</span></span>
+                    <div className="bg-white/10 backdrop-blur-md shadow-md rounded-lg px-6 py-3">
+                        <span className="font-semibold">Moves: <span className="text-purple-600">{moves}</span></span>
                     </div>
-                    <div className="bg-white shadow-md rounded-lg px-6 py-3">
-                        <span className="font-semibold">Time: <span className="text-blue-600">{time}s</span></span>
+                    <div className="bg-white/10 backdrop-blur-md shadow-md rounded-lg px-6 py-3">
+                        <span className="font-semibold">Time: <span className="text-purple-600">{time}s</span></span>
                     </div>
-                    <button onClick={resetGame} className="bg-blue-600 hover:bg-blue-700 px-6 py-3 text-white rounded-lg font-semibold transition-colors">
+                    <button onClick={resetGame} className="bg-purple-600/80 hover:bg-purple-700/70 shadow-md cursor-pointer backdrop-blur-md px-6 py-3 text-white rounded-lg font-semibold transition-colors">
                         Restart
                     </button>
                 </div>
             </div>
 
             {/* Game board will go here */}
-            <div className="grid grid-cols-4 gap-4 max-w-xl mx-auto">
+            <div className="grid grid-cols-4 gap-4 gap-x-6 max-w-2xl mx-auto">
                 {tiles.map((tile) => (
                     <Tile 
                     key = {tile.id}

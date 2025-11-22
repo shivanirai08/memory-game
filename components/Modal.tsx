@@ -14,14 +14,14 @@ export default function Modal(props: ModalProps){
                     <div className="text-6xl mb-4">🎉</div>
                     <h1 className="text-4xl font-bold text-gray-800 mb-2">You Win!</h1>
                     <p className="text-lg text-gray-600">
-                        You completed the game in <span className="font-bold text-blue-600">{props.moves}</span> moves
+                        You completed the game in <span className="font-bold text-purple-600">{props.moves}</span> moves
                     </p>
                 </div>
                 
                 <div className="flex flex-col gap-3 mt-8">
                     <button 
                         onClick={props.onRestart}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors shadow-md"
+                        className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors shadow-md"
                     >
                         Play Again
                     </button>
