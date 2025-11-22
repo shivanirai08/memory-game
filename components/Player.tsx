@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 interface PlayerProps {
     onSubmit: (name: string) => void;
@@ -9,7 +10,42 @@ interface PlayerProps {
 export default function Player(props: PlayerProps){
     const [name, setName] = useState("");
 
-    const handleStart = () => {
+    useEffect(() => {
+        const sessionId = localStorage.getItem('gameSessionId');
+        if(sessionId){
+            const fetchName = async () => {
+                const { data, error } = await supabase
+                .from('player_name')
+                .select('name')
+                .eq('session_id', sessionId);
+            } 
+            fetchName();
+            props.onSubmit(name);
+            return;
+            }
+    }, []);
+
+    const handleStart = async () => {
+        let sessionId = localStorage.getItem('gameSessionId');
+        if(name.trim() === ""){
+            return;
+        }
+        try{
+            if(!sessionId){
+                sessionId = crypto.randomUUID();
+                localStorage.setItem('gameSessionId', sessionId);
+            const {data, error} = await supabase
+            .from('player_name')
+            .insert([{ name: name.trim(), session_id: sessionId }]);
+            if(error){
+                console.error("Error inserting name:", error);
+            }else{
+                console.log("Name inserted successfully:", data);
+            }
+        } else return;
+        } catch (error) {
+            console.error("Unexpected error:", error);
+        }
         props.onSubmit(name.trim() || "Guest");
     };
 
