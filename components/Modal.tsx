@@ -4,15 +4,18 @@ interface ModalProps {
     onClose: () => void;
     onRestart: () => void;
     moves: number;
+    playerName?: string;
 }
 
 export default function Modal(props: ModalProps){
     return(
-        <div className="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4">
             <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center transform transition-all">
                 <div className="mb-6">
                     <div className="text-6xl mb-4">🎉</div>
-                    <h1 className="text-4xl font-bold text-gray-800 mb-2">You Win!</h1>
+                    <h1 className="text-4xl font-bold text-gray-800 mb-2">
+                        {props.playerName ? `${props.playerName} Wins!` : 'You Win!'}
+                    </h1>
                     <p className="text-lg text-gray-600">
                         You completed the game in <span className="font-bold text-purple-600">{props.moves}</span> moves
                     </p>

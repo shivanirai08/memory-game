@@ -4,6 +4,7 @@ import React from "react";
 import Tile from "./tiles";
 import { useState, useEffect } from "react";
 import Modal from "./Modal";
+import Player from "./Player";
 
 
 interface TileData {
@@ -23,6 +24,8 @@ export default function Game() {
     const [time, setTime] = useState<number>(0);
     const [gameWon, setGameWon] = useState<boolean>(false);
     const [isChecking, setIsChecking] = useState<boolean>(false);
+    const [playerName, setPlayerName] = useState<string | undefined>(undefined);
+    const [showPlayerModal, setShowPlayerModal] = useState<boolean>(true);
 
     // initialize and shuffle tiles
     const initializeTiles = () => {
@@ -52,13 +55,13 @@ export default function Game() {
     //timer
     useEffect(() => {
         let timer: NodeJS.Timeout;
-        if(!gameWon){
+        if(!gameWon && playerName){
             timer = setInterval(() => {
                 setTime(prevTime => prevTime + 1);
             }, 1000);
         return () => clearInterval(timer);
         }
-    }, [gameWon]);
+    }, [gameWon, playerName]);
 
     // all tiles arre matched
     useEffect(()=> {
@@ -111,10 +114,14 @@ export default function Game() {
         }
     }
 
-
+    const handlePlayerSubmit = (name: string) => {
+        setPlayerName(name);
+        setShowPlayerModal(false);
+    }
 
     return(
-        <div className="flex flex-col px-4 py-8 bg-white/10 backdrop-blur-md rounded-lg shadow-lg w-2xl">
+        <>
+        <div className="flex flex-col px-4 py-8 bg-white/10 backdrop-blur-md rounded-lg shadow-lg w-2xl relative">
             {/* header - title, moves, timer, restart */}
             <div className="mb-8">
                 <h1 className="text-4xl font-bold text-center mb-6">Memory Game</h1>
@@ -147,16 +154,22 @@ export default function Game() {
                     ))}
                 
             </div>
+        </div>
+            {
+                showPlayerModal && (
+                    <Player onSubmit={handlePlayerSubmit} />
+                )
+            }
             {
                 gameWon && (
                     <Modal
                         onClose={resetGame}
                         onRestart={resetGame}
                         moves={moves}
+                        playerName={playerName}
                     />
                 )
             }
-        </div>
-
+        </>
     );
 }
