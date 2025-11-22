@@ -124,7 +124,14 @@ export default function Game() {
         <div className="flex flex-col px-4 py-8 bg-white/10 backdrop-blur-md rounded-lg shadow-lg w-2xl relative">
             {/* header - title, moves, timer, restart */}
             <div className="mb-8">
-                <h1 className="text-4xl font-bold text-center mb-6">Memory Game</h1>
+                <h1 className="text-4xl font-bold text-center mb-2">Memory Game</h1>
+                {playerName && (
+                    <div className="text-center mb-4">
+                        <p className="text-lg text-gray-700">
+                            Enjoy the Game,  <span className="font-bold text-purple-600">{playerName}</span>
+                        </p>
+                    </div>
+                )}
                 <div className="flex justify-center items-center gap-6">
                     <div className="bg-white/10 backdrop-blur-md shadow-md rounded-lg px-6 py-3">
                         <span className="font-semibold">Moves: <span className="text-purple-600">{moves}</span></span>

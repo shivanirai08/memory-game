@@ -9,6 +9,7 @@ interface PlayerProps {
 
 export default function Player(props: PlayerProps){
     const [name, setName] = useState("");
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const sessionId = localStorage.getItem('gameSessionId');
@@ -18,18 +19,51 @@ export default function Player(props: PlayerProps){
                 .from('player_name')
                 .select('name')
                 .eq('session_id', sessionId);
+                if(error){
+                    console.error("Error fetching name:", error);
+                }else if(data && data.length > 0){
+                    setName(data[0].name);
+                    props.onSubmit(data[0].name);
+                }
             } 
             fetchName();
-            props.onSubmit(name);
             return;
             }
     }, []);
 
+    const validateName = (name: string): boolean => {
+        setError("");
+        
+        if (name.trim() === "") {
+            setError("Please enter your name");
+            return false;
+        }
+        
+        if (name.trim().length < 2) {
+            setError("Name must be at least 2 characters long");
+            return false;
+        }
+        
+        if (name.trim().length > 20) {
+            setError("Name must be less than 20 characters");
+            return false;
+        }
+        
+        if (!/^[a-zA-Z\s]+$/.test(name.trim())) {
+            setError("Name can only contain letters and spaces");
+            return false;
+        }
+        
+        return true;
+    };
+
     const handleStart = async () => {
         let sessionId = localStorage.getItem('gameSessionId');
-        if(name.trim() === ""){
+        
+        if (!validateName(name)) {
             return;
         }
+        
         try{
             if(!sessionId){
                 sessionId = crypto.randomUUID();
@@ -39,14 +73,18 @@ export default function Player(props: PlayerProps){
             .insert([{ name: name.trim(), session_id: sessionId }]);
             if(error){
                 console.error("Error inserting name:", error);
+                setError("Failed to save your name. Please try again.");
+                return;
             }else{
                 console.log("Name inserted successfully:", data);
             }
         } else return;
         } catch (error) {
             console.error("Unexpected error:", error);
+            setError("An unexpected error occurred. Please try again.");
+            return;
         }
-        props.onSubmit(name.trim() || "Guest");
+        props.onSubmit(name.trim());
     };
 
     const handleSkip = () => {
@@ -65,11 +103,19 @@ export default function Player(props: PlayerProps){
                         type="text"
                         placeholder="Your name"
                         value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => {
+                            setName(e.target.value);
+                            setError("");
+                        }}
                         onKeyDown={(e) => e.key === 'Enter' && handleStart()}
-                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600 transition-colors"
+                        className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors ${
+                            error ? 'border-red-500 focus:border-red-600' : 'border-gray-300 focus:border-purple-600'
+                        }`}
                         autoFocus
                     />
+                    {error && (
+                        <p className="text-red-500 text-sm mt-2 text-left">{error}</p>
+                    )}
                 </div>
                 
                 <div className="flex flex-col gap-3 mt-8">
