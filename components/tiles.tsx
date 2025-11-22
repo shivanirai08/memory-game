@@ -33,9 +33,9 @@ export default function Tile(props: TileProps){
 
     return(
         <div 
-            className={`w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-lg shadow-md flex items-center justify-center cursor-pointer transition-all duration-500 transform ${
+            className={`w-24 h-24 rounded-lg shadow-md flex items-center backdrop-blur-xl justify-center cursor-pointer transition-all duration-500 transform ${
                 props.disabled ? 'pointer-events-none' : ''
-            } ${ props.isMatched ? 'bg-purple-100' : 'bg-white' }`}
+            } ${ props.isMatched ? 'bg-purple-200/50' : 'bg-white/20' }`}
             onClick={!props.disabled ? props.onClick : undefined}
             style={{
                 transformStyle: 'preserve-3d',
@@ -51,7 +51,7 @@ export default function Tile(props: TileProps){
                 alt="Tile Image"
                 width={64}
                 height={64}
-                className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16"
+                className="w-16 h-16"
                 style={{ transform: 'rotateY(180deg)' }}
             />
          ) : (
